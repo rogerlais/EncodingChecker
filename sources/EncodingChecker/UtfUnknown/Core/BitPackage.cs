@@ -56,11 +56,12 @@ namespace UtfUnknown.Core
         public static int UNIT_MASK_8BITS  = 0x000000FF;
         public static int UNIT_MASK_16BITS = 0x0000FFFF;
 
-        private int indexShift;
-        private int shiftMask;
-        private int bitShift;
-        private int unitMask;
-        private int[] data;
+        //Roger: group of fields set to readonly
+        private readonly int indexShift;
+        private readonly int shiftMask;
+        private readonly int bitShift;
+        private readonly int unitMask;
+        private readonly int[] data;
         
         public BitPackage(int indexShift, int shiftMask,
                 int bitShift, int unitMask, int[] data)
@@ -91,8 +92,8 @@ namespace UtfUnknown.Core
         
         public int Unpack(int i)
         {
-            return (data[i >> indexShift] >> 
-                    ((i & shiftMask) << bitShift)) & unitMask;
+            return ( this.data[i >> this.indexShift] >> 
+                    ((i & this.shiftMask ) << this.bitShift )) & this.unitMask;
         }
    }
 }
