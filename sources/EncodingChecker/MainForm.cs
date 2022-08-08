@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Deployment.Application;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -38,7 +39,8 @@ namespace EncodingChecker {
 		private readonly BackgroundWorker _actionWorker;
 		private CurrentAction _currentAction;
 		private Settings _settings;
-
+		private ListViewItem heldDownItem;
+		private Point heldDownPoint;
 		private const int RESULTS_COLUMN_CHARSET = 0;
 		private const int RESULTS_COLUMN_FILE_NAME = 1;
 		private const int RESULTS_COLUMN_FILE_EXT = 2;
@@ -577,6 +579,29 @@ namespace EncodingChecker {
 
 		private void ShowWarning(string message, params object[] args) {
 			MessageBox.Show( this, string.Format( message, args ), @"Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning );
+		}
+
+		private void LstResults_MouseDown(object sender, MouseEventArgs e) {
+			//negate below
+			this.lstResults.AutoArrange = false;
+
+			this.heldDownItem = this.lstResults.GetItemAt( e.X, e.Y );
+			if (this.heldDownItem != null) {
+				this.heldDownPoint = new System.Drawing.Point( e.X - this.heldDownItem.Position.X,
+										  e.Y - this.heldDownItem.Position.Y );
+			}
+		}
+
+		private void LstResults_MouseMove(object sender, MouseEventArgs e) {
+			if (this.heldDownItem != null) {
+				this.heldDownItem.Position = new Point( e.Location.X - this.heldDownPoint.X, e.Location.Y - this.heldDownPoint.Y );
+			}
+		}
+
+		private void LstResults_MouseUp(object sender, MouseEventArgs e) {
+			this.heldDownItem = null;
+			//negate below
+			this.lstResults.AutoArrange = true;
 		}
 	}
 }
