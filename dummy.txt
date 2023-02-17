@@ -1,0 +1,1 @@
+Apenas para gerar alteração e testar git credential manager básico
